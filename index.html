@@ -1,285 +1,428 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
   <meta charset="UTF-8" />
-  <title>MedNote.AI – AI Thư Ký Y Khoa</title>
+  <title>MedNote.AI – Trợ lý hồ sơ bệnh án</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
-
   <style>
-    .active-nav {
-      background-color: #e8f1ff;
-      border-left: 3px solid #1a73e8;
-      color: #1a73e8 !important;
+    .step-active {
+      border-color: #1d4ed8;
+      background-color: #eff6ff;
+      color: #1d4ed8;
       font-weight: 600;
     }
   </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-slate-50 text-slate-900">
 
-  <!-- MAIN LAYOUT -->
-  <div class="flex h-screen w-full overflow-hidden">
+<div class="min-h-screen flex flex-col">
 
-    <!-- SIDEBAR -->
-    <aside class="w-60 bg-white border-r border-gray-200 flex flex-col py-6">
-      <div class="px-5 flex items-center gap-3 mb-6">
-        <div class="w-10 h-10 bg-blue-600 text-white rounded-lg flex items-center justify-center font-bold text-xl">
+  <!-- HEADER -->
+  <header class="w-full border-b border-slate-200 bg-white">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-lg">
           M
         </div>
-        <div class="font-semibold text-gray-900 text-lg">MedNote.AI</div>
+        <div>
+          <div class="text-sm font-semibold">MedNote.AI</div>
+          <div class="text-xs text-slate-500">Ghi lời bác sĩ → Hồ sơ bệnh án</div>
+        </div>
+      </div>
+      <div class="text-xs text-slate-500">
+        Chế độ: <span class="font-medium text-slate-700">Bác sĩ nội khoa</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 w-full">
+    <div class="max-w-5xl mx-auto px-4 py-4 sm:py-6">
+
+      <!-- STEPPER -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-5 text-xs sm:text-sm">
+        <button id="step-1" class="step-btn border border-slate-300 rounded-lg px-3 py-2 flex items-center gap-2">
+          <span class="w-5 h-5 rounded-full border border-slate-400 flex items-center justify-center text-[11px]">1</span>
+          Ghi âm
+        </button>
+        <button id="step-2" class="step-btn border border-slate-300 rounded-lg px-3 py-2 flex items-center gap-2">
+          <span class="w-5 h-5 rounded-full border border-slate-400 flex items-center justify-center text-[11px]">2</span>
+          Transcript
+        </button>
+        <button id="step-3" class="step-btn border border-slate-300 rounded-lg px-3 py-2 flex items-center gap-2">
+          <span class="w-5 h-5 rounded-full border border-slate-400 flex items-center justify-center text-[11px]">3</span>
+          Hồ sơ bệnh án
+        </button>
       </div>
 
-      <nav class="flex flex-col gap-1 text-sm">
-        <button data-target="screen-home" class="nav-btn text-gray-600 px-5 py-3 text-left hover:bg-gray-100">🏠 Trang chủ</button>
-        <button data-target="screen-record" class="nav-btn text-gray-600 px-5 py-3 text-left hover:bg-gray-100">🎙️ Ghi âm</button>
-        <button data-target="screen-transcript" class="nav-btn text-gray-600 px-5 py-3 text-left hover:bg-gray-100">📄 Transcript</button>
-        <button data-target="screen-summary" class="nav-btn text-gray-600 px-5 py-3 text-left hover:bg-gray-100">🧾 Summary</button>
-        <button data-target="screen-entities" class="nav-btn text-gray-600 px-5 py-3 text-left hover:bg-gray-100">🧬 Entity Table</button>
-        <button data-target="screen-export" class="nav-btn text-gray-600 px-5 py-3 text-left hover:bg-gray-100">✅ Xuất Note</button>
-      </nav>
-    </aside>
-
-    <!-- CONTENT -->
-    <main class="flex-1 overflow-y-auto p-8">
-
-      <!-- HOME SCREEN -->
-      <section id="screen-home" class="screen">
-        <h1 class="text-2xl font-semibold mb-4">Ghi chép y khoa tự động</h1>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-          <!-- LEFT -->
-          <div class="md:col-span-2 bg-white border border-gray-200 rounded-xl p-6">
-            <p class="text-gray-600 mb-4">MedNote.AI giúp bác sĩ ghi âm – tạo transcript – tóm tắt chuẩn y khoa.</p>
-
-            <button id="goRecord" class="bg-blue-600 text-white px-5 py-3 rounded-lg text-sm font-medium hover:bg-blue-700">
-              🎙️ Bắt đầu ghi âm buổi khám
-            </button>
-
-            <div class="grid grid-cols-3 gap-4 mt-6 text-center">
-              <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <div class="text-xl font-bold text-blue-600">90%</div>
-                <div class="text-xs text-gray-600">Tiết kiệm thời gian</div>
-              </div>
-              <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <div class="text-sm font-bold text-gray-700">Chuẩn y khoa</div>
-                <div class="text-xs text-gray-600">Ghi chú đồng nhất</div>
-              </div>
-              <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <div class="text-sm font-bold text-gray-700">Xuất nhanh</div>
-                <div class="text-xs text-gray-600">EMR / HIS / Zalo</div>
-              </div>
-            </div>
+      <!-- PATIENT INFO -->
+      <section id="patient-info-section" class="hidden mb-4 bg-white border border-slate-200 rounded-lg px-4 py-3 text-xs sm:text-sm">
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center gap-2">
+            <span class="text-slate-500">Bệnh nhân:</span>
+            <input id="pt-name" class="border border-slate-300 rounded px-2 py-1 w-40" />
           </div>
-
-          <!-- RIGHT -->
-          <div class="bg-white border border-gray-200 rounded-xl p-6">
-            <h2 class="font-medium mb-3">Lịch sử khám gần đây</h2>
-
-            <div class="space-y-3 text-sm">
-              <div class="p-3 bg-gray-50 border rounded-lg flex justify-between">
-                <div>
-                  <div class="font-medium">Nguyễn Văn A</div>
-                  <div class="text-xs text-gray-500">Hôm nay · 09:15</div>
-                </div>
-                <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">Summary</span>
-              </div>
-              <div class="p-3 bg-gray-50 border rounded-lg flex justify-between">
-                <div>
-                  <div class="font-medium">Trần Thị B</div>
-                  <div class="text-xs text-gray-500">Hôm nay · 08:40</div>
-                </div>
-                <span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">Transcript</span>
-              </div>
-            </div>
+          <div class="flex items-center gap-2">
+            <span class="text-slate-500">Tuổi:</span>
+            <input id="pt-age" type="number" class="border border-slate-300 rounded px-2 py-1 w-16" />
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-slate-500">Mã HS:</span>
+            <input id="pt-id" class="border border-slate-300 rounded px-2 py-1 w-32" />
           </div>
         </div>
       </section>
 
-      <!-- =========================
-           RECORD SCREEN (ĐƠN GIẢN)
-         ========================= -->
+      <!-- SCREEN 0 – PATIENT SELECT -->
+      <section id="screen-patient" class="screen">
+        <div class="bg-white border border-slate-200 rounded-lg p-4 sm:p-5">
+          <h2 class="text-lg font-semibold mb-3">Chọn bệnh nhân</h2>
+
+          <div class="overflow-x-auto border border-slate-200 rounded-md">
+            <table class="min-w-full text-sm">
+              <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 text-xs">
+                <tr>
+                  <th class="py-2 px-2 text-left">Tên bệnh nhân</th>
+                  <th class="py-2 px-2 text-left">Tuổi</th>
+                  <th class="py-2 px-2 text-left">Mã HS</th>
+                  <th class="py-2 px-2 text-center">Chọn</th>
+                </tr>
+              </thead>
+              <tbody id="patient-table-body">
+                <tr class="border-b">
+                  <td class="py-2 px-2">Nguyễn Văn A</td>
+                  <td class="py-2 px-2">35</td>
+                  <td class="py-2 px-2">2025-00123</td>
+                  <td class="py-2 px-2 text-center">
+                    <button class="select-patient px-3 py-1 rounded bg-blue-600 text-white text-xs"
+                      data-name="Nguyễn Văn A" data-age="35" data-id="2025-00123">
+                      Chọn
+                    </button>
+                  </td>
+                </tr>
+                <tr class="border-b">
+                  <td class="py-2 px-2">Trần Thị B</td>
+                  <td class="py-2 px-2">29</td>
+                  <td class="py-2 px-2">2025-00124</td>
+                  <td class="py-2 px-2 text-center">
+                    <button class="select-patient px-3 py-1 rounded bg-blue-600 text-white text-xs"
+                      data-name="Trần Thị B" data-age="29" data-id="2025-00124">
+                      Chọn
+                    </button>
+                  </td>
+                </tr>
+                <tr class="border-b">
+                  <td class="py-2 px-2">Lê Văn C</td>
+                  <td class="py-2 px-2">52</td>
+                  <td class="py-2 px-2">2025-00125</td>
+                  <td class="py-2 px-2 text-center">
+                    <button class="select-patient px-3 py-1 rounded bg-blue-600 text-white text-xs"
+                      data-name="Lê Văn C" data-age="52" data-id="2025-00125">
+                      Chọn
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN 1 – RECORDING -->
       <section id="screen-record" class="screen hidden">
-        <h1 class="text-xl font-semibold mb-4">Ghi âm buổi khám</h1>
+        <div class="bg-white border border-slate-200 rounded-lg p-4 sm:p-5">
+          <h2 class="text-lg font-semibold mb-3">Ghi âm buổi khám</h2>
 
-        <div class="bg-white border rounded-xl p-6 max-w-lg">
-          <p class="text-sm text-gray-600 mb-4">Bấm bắt đầu để ghi âm.</p>
-
-          <!-- TIMER -->
-          <div class="text-center my-4">
-            <div id="timer" class="text-3xl font-mono">00:00</div>
-            <div id="record-status" class="text-xs text-gray-500 mt-1">Chưa ghi</div>
+          <div class="flex gap-10 py-4 border-y mb-4">
+            <div>
+              <div class="text-xs text-slate-500 mb-1">Thời gian ghi</div>
+              <div id="record-timer" class="text-4xl font-mono">00:00</div>
+            </div>
+            <div>
+              <div class="text-xs text-slate-500 mb-1">Trạng thái</div>
+              <div id="record-status" class="text-sm">Chưa bắt đầu</div>
+            </div>
           </div>
 
-          <!-- BUTTON -->
-          <button id="toggleRecord" class="w-full py-3 bg-red-500 text-white rounded-lg hover:bg-red-600">
-            ▶️ Bắt đầu
+          <button id="btn-toggle-record"
+            class="px-4 py-2.5 rounded-md bg-red-600 text-white text-sm font-medium hover:bg-red-700">
+            ▶️ Bắt đầu ghi
           </button>
 
-          <button id="goTranscript" class="mt-4 text-sm text-blue-600 hover:underline w-full text-center">
+          <button id="btn-goto-transcript"
+            class="px-4 py-2.5 ml-3 rounded-md border border-slate-300 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-40"
+            disabled>
             Chuyển sang Transcript →
           </button>
         </div>
       </section>
 
-      <!-- TRANSCRIPT -->
+      <!-- SCREEN 2 – TRANSCRIPT -->
       <section id="screen-transcript" class="screen hidden">
-        <h1 class="text-xl font-semibold mb-4">Transcript buổi khám</h1>
+        <div class="bg-white border border-slate-200 rounded-lg p-5">
+          <h2 class="text-lg font-semibold mb-2">Transcript</h2>
+          <textarea id="transcript-text"
+            class="w-full min-h-[240px] border p-3 bg-slate-50 rounded-md text-sm">Bác sĩ: Chào anh...
+Bệnh nhân: ...</textarea>
 
-        <textarea class="w-full h-80 border rounded-xl p-4 text-sm bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500">
-Bác sĩ: Chào anh, hôm nay anh thấy khó chịu ở đâu?
-Bệnh nhân: Em đau đầu 3 ngày và sốt nhẹ…
-        </textarea>
+          <div class="flex justify-between mt-3">
+            <button id="btn-back-record" class="text-xs text-slate-500 hover:text-slate-700">
+              ← Quay lại ghi âm
+            </button>
 
-        <div class="flex justify-end mt-4">
-          <button id="goSummary" class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">
-            Tạo Summary
-          </button>
-        </div>
-      </section>
-
-      <!-- SUMMARY -->
-      <section id="screen-summary" class="screen hidden">
-        <h1 class="text-xl font-semibold mb-4">Summary (SOAP)</h1>
-
-        <div class="grid md:grid-cols-2 gap-4">
-          <div class="bg-white p-4 border rounded-xl">
-            <h3 class="font-semibold text-sm mb-1">S — Subjective</h3>
-            <textarea class="w-full h-40 border rounded-lg p-2 text-sm bg-gray-50 focus:bg-white">Đau đầu 3 ngày...</textarea>
-          </div>
-
-          <div class="bg-white p-4 border rounded-xl">
-            <h3 class="font-semibold text-sm mb-1">O — Objective</h3>
-            <textarea class="w-full h-40 border rounded-lg p-2 text-sm bg-gray-50 focus:bg-white">Mạch 86l/p...</textarea>
-          </div>
-
-          <div class="bg-white p-4 border rounded-xl">
-            <h3 class="font-semibold text-sm mb-1">A — Assessment</h3>
-            <textarea class="w-full h-40 border rounded-lg p-2 text-sm bg-gray-50 focus:bg-white">Nhiễm siêu vi...</textarea>
-          </div>
-
-          <div class="bg-white p-4 border rounded-xl">
-            <h3 class="font-semibold text-sm mb-1">P — Plan</h3>
-            <textarea class="w-full h-40 border rounded-lg p-2 text-sm bg-gray-50 focus:bg-white">Paracetamol...</textarea>
-          </div>
-        </div>
-
-        <div class="flex justify-end mt-4">
-          <button id="goEntities" class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">
-            Tạo Entity Table
-          </button>
-        </div>
-      </section>
-
-      <!-- ENTITY TABLE -->
-      <section id="screen-entities" class="screen hidden">
-        <h1 class="text-xl font-semibold mb-4">Bảng thực thể y khoa</h1>
-
-        <table class="w-full text-sm bg-white border rounded-lg">
-          <thead class="bg-gray-100 text-gray-600 text-xs">
-            <tr>
-              <th class="py-2 px-3 text-left">Loại</th>
-              <th class="py-2 px-3 text-left">Giá trị</th>
-              <th class="py-2 px-3 text-right">Độ tin cậy</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="border-t">
-              <td class="py-2 px-3">Triệu chứng</td>
-              <td class="py-2 px-3">Đau đầu, sốt nhẹ</td>
-              <td class="py-2 px-3 text-right">0.94</td>
-            </tr>
-            <tr class="border-t">
-              <td class="py-2 px-3">Chẩn đoán</td>
-              <td class="py-2 px-3">Nhiễm siêu vi</td>
-              <td class="py-2 px-3 text-right">0.91</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="flex justify-end mt-4">
-          <button id="goExport" class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">
-            Xuất Note
-          </button>
-        </div>
-      </section>
-
-      <!-- EXPORT -->
-      <section id="screen-export" class="screen hidden">
-        <h1 class="text-xl font-semibold mb-4">Xuất ghi chú</h1>
-
-        <div class="bg-white border rounded-xl p-6">
-          <pre class="bg-gray-50 p-4 rounded-lg text-sm overflow-auto">
-S: Đau đầu 3 ngày...
-O: Mạch 86l/p...
-A: Nhiễm siêu vi...
-P: Paracetamol...
-          </pre>
-
-          <div class="flex justify-end gap-2 mt-4">
-            <button class="px-4 py-2 border rounded-lg text-sm">Copy</button>
-            <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">Xuất PDF</button>
+            <button id="btn-goto-note"
+              class="px-4 py-2 rounded-md bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
+              Tạo Hồ sơ bệnh án
+            </button>
           </div>
         </div>
       </section>
 
-    </main>
-  </div>
+      <!-- SCREEN 3 – MEDICAL NOTE -->
+      <section id="screen-note" class="screen hidden">
+        <div class="bg-white border border-slate-200 rounded-lg p-5">
+          <h2 class="text-lg font-semibold mb-2">Hồ sơ bệnh án (SOAP)</h2>
 
-  <script>
-    const screens = document.querySelectorAll(".screen");
-    const navBtns = document.querySelectorAll(".nav-btn");
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-    function showScreen(id) {
-      screens.forEach(s => s.classList.add("hidden"));
-      document.getElementById(id).classList.remove("hidden");
+            <!-- S -->
+            <div>
+              <label class="text-sm font-semibold">S – Chủ quan</label>
+              <textarea id="soap-s"
+                class="w-full h-28 border p-2 mt-1 bg-slate-50 rounded-md text-sm">...</textarea>
+            </div>
 
-      navBtns.forEach(b => b.classList.remove("active-nav"));
-      [...navBtns].find(b => b.dataset.target === id)?.classList.add("active-nav");
-    }
+            <!-- O -->
+            <div>
+              <label class="text-sm font-semibold">O – Khách quan</label>
+              <textarea id="soap-o"
+                class="w-full h-28 border p-2 mt-1 bg-slate-50 rounded-md text-sm">...</textarea>
+            </div>
 
-    navBtns.forEach(btn => {
-      btn.addEventListener("click", () => showScreen(btn.dataset.target));
-    });
+            <!-- A -->
+            <div>
+              <label class="text-sm font-semibold">A – Nhận định</label>
+              <textarea id="soap-a"
+                class="w-full h-24 border p-2 mt-1 bg-slate-50 rounded-md text-sm">...</textarea>
+            </div>
 
-    document.getElementById("goRecord").onclick = () => showScreen("screen-record");
-    document.getElementById("goTranscript").onclick = () => showScreen("screen-transcript");
-    document.getElementById("goSummary").onclick = () => showScreen("screen-summary");
-    document.getElementById("goEntities").onclick = () => showScreen("screen-entities");
-    document.getElementById("goExport").onclick = () => showScreen("screen-export");
+            <!-- P -->
+            <div>
+              <label class="text-sm font-semibold">P – Kế hoạch</label>
+              <textarea id="soap-p"
+                class="w-full h-24 border p-2 mt-1 bg-slate-50 rounded-md text-sm">...</textarea>
+            </div>
+          </div>
 
-    // Recorder demo logic
-    let sec = 0, isRecording = false, timer;
-    const timerEl = document.getElementById("timer");
-    const statusEl = document.getElementById("record-status");
-    const toggleBtn = document.getElementById("toggleRecord");
+          <!-- ORDERS -->
+          <div class="mt-4">
+            <h3 class="text-sm font-semibold mb-1">Y lệnh</h3>
+            <table class="min-w-full border text-xs">
+              <thead class="bg-slate-50 border-b text-slate-600">
+                <tr>
+                  <th class="py-2 px-2 text-left">Thuốc/Dịch</th>
+                  <th class="py-2 px-2 text-left">Liều</th>
+                  <th class="py-2 px-2 text-left">Đường dùng</th>
+                  <th class="py-2 px-2 text-left">Lịch dùng</th>
+                </tr>
+              </thead>
+              <tbody id="orders-body">
+                <tr class="border-b">
+                  <td class="py-1 px-2"><input class="border w-full px-1" value="Paracetamol" /></td>
+                  <td class="py-1 px-2"><input class="border w-full px-1" value="1g" /></td>
+                  <td class="py-1 px-2"><input class="border w-full px-1" value="Uống" /></td>
+                  <td class="py-1 px-2"><input class="border w-full px-1" value="Khi sốt" /></td>
+                </tr>
 
-    function fmt(n) { return n.toString().padStart(2, "0"); }
+                <!-- Add empty row -->
+                <tr>
+                  <td class="py-1 px-2"><input class="border w-full px-1" placeholder="Thêm thuốc..." /></td>
+                  <td class="py-1 px-2"><input class="border w-full px-1" /></td>
+                  <td class="py-1 px-2"><input class="border w-full px-1" /></td>
+                  <td class="py-1 px-2"><input class="border w-full px-1" /></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-    toggleBtn.onclick = () => {
-      isRecording = !isRecording;
+          <div class="flex justify-between mt-4">
+            <button id="btn-back-transcript-from-note" class="text-xs text-slate-500 hover:text-slate-700">
+              ← Quay lại Transcript
+            </button>
 
-      if (isRecording) {
-        sec = 0;
-        timer = setInterval(() => {
-          sec++;
-          timerEl.textContent = `${fmt(sec / 60 | 0)}:${fmt(sec % 60)}`;
-        }, 1000);
+            <button id="btn-preview-note"
+              class="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700">Xem & Copy</button>
+          </div>
+        </div>
+      </section>
 
-        toggleBtn.textContent = "⏸️ Dừng";
-        toggleBtn.classList.replace("bg-red-500", "bg-red-600");
-        statusEl.textContent = "Đang ghi…";
 
-      } else {
-        clearInterval(timer);
-        toggleBtn.textContent = "▶️ Bắt đầu";
-        toggleBtn.classList.replace("bg-red-600", "bg-red-500");
-        statusEl.textContent = "Đã dừng, sẵn sàng chuyển Transcript";
-      }
-    };
-  </script>
+      <!-- MODAL PREVIEW -->
+      <div id="preview-modal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg w-full max-w-2xl max-h-[80vh] flex flex-col">
+          <div class="p-3 border-b flex justify-between items-center">
+            <p class="text-sm font-semibold">Hồ sơ bệnh án (text thô)</p>
+            <button id="btn-close-preview" class="text-sm">✕</button>
+          </div>
 
+          <pre id="preview-content"
+               class="flex-1 p-3 bg-slate-50 overflow-auto text-xs whitespace-pre-wrap"></pre>
+
+          <div class="p-3 border-t flex justify-end">
+            <button id="btn-copy-note"
+              class="px-3 py-2 bg-blue-600 text-white rounded-md text-xs hover:bg-blue-700">
+              Copy vào clipboard
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+
+<script>
+/* ---------------------------------------------------------
+   STEP MANAGEMENT
+--------------------------------------------------------- */
+const screens = {
+  patient: document.getElementById("screen-patient"),
+  record: document.getElementById("screen-record"),
+  transcript: document.getElementById("screen-transcript"),
+  note: document.getElementById("screen-note"),
+};
+
+const steps = {
+  1: document.getElementById("step-1"),
+  2: document.getElementById("step-2"),
+  3: document.getElementById("step-3"),
+};
+
+function setStep(step) {
+  screens.patient.classList.toggle("hidden", step !== 0);
+  screens.record.classList.toggle("hidden", step !== 1);
+  screens.transcript.classList.toggle("hidden", step !== 2);
+  screens.note.classList.toggle("hidden", step !== 3);
+
+  Object.entries(steps).forEach(([k, btn]) => {
+    btn.classList.toggle("step-active", Number(k) === step);
+  });
+
+  document.getElementById("patient-info-section").classList.toggle("hidden", step === 0);
+}
+
+setStep(0);
+
+/* ---------------------------------------------------------
+   PATIENT SELECT → AUTOFILL
+--------------------------------------------------------- */
+const inputName = document.getElementById("pt-name");
+const inputAge = document.getElementById("pt-age");
+const inputID = document.getElementById("pt-id");
+
+document.querySelectorAll(".select-patient").forEach(btn => {
+  btn.addEventListener("click", () => {
+    inputName.value = btn.dataset.name;
+    inputAge.value = btn.dataset.age;
+    inputID.value = btn.dataset.id;
+    setStep(1);
+  });
+});
+
+/* ---------------------------------------------------------
+   RECORDING DEMO LOGIC
+--------------------------------------------------------- */
+let rec = false, sec = 0, interval;
+const timerEl = document.getElementById("record-timer");
+const statusEl = document.getElementById("record-status");
+const btnToggleRecord = document.getElementById("btn-toggle-record");
+const btnGotoTranscript = document.getElementById("btn-goto-transcript");
+
+btnToggleRecord.addEventListener("click", () => {
+  rec = !rec;
+  if (rec) {
+    sec = 0;
+    timerEl.textContent = "00:00";
+    statusEl.textContent = "Đang ghi âm...";
+    btnToggleRecord.textContent = "⏸ Dừng";
+    btnToggleRecord.classList.replace("bg-red-600", "bg-red-700");
+    btnGotoTranscript.disabled = true;
+
+    interval = setInterval(() => {
+      sec++;
+      const m = String(Math.floor(sec / 60)).padStart(2, '0');
+      const s = String(sec % 60).padStart(2, '0');
+      timerEl.textContent = `${m}:${s}`;
+    }, 1000);
+  } else {
+    clearInterval(interval);
+    statusEl.textContent = "Đã dừng ghi.";
+    btnToggleRecord.textContent = "▶️ Ghi lại";
+    btnToggleRecord.classList.replace("bg-red-700", "bg-red-600");
+    btnGotoTranscript.disabled = false;
+  }
+});
+
+btnGotoTranscript.addEventListener("click", () => setStep(2));
+
+/* ---------------------------------------------------------
+   TRANSCRIPT
+--------------------------------------------------------- */
+document.getElementById("btn-back-record").addEventListener("click", () => setStep(1));
+document.getElementById("btn-goto-note").addEventListener("click", () => setStep(3));
+
+/* ---------------------------------------------------------
+   NOTE (SOAP) + ORDERS
+--------------------------------------------------------- */
+document.getElementById("btn-back-transcript-from-note").addEventListener("click", () => setStep(2));
+
+/* ---------------------------------------------------------
+   PREVIEW
+--------------------------------------------------------- */
+const previewModal = document.getElementById("preview-modal");
+const previewContent = document.getElementById("preview-content");
+
+document.getElementById("btn-preview-note").addEventListener("click", () => {
+  const text =
+`HỒ SƠ BỆNH ÁN
+BN: ${inputName.value}, ${inputAge.value} tuổi, HS: ${inputID.value}
+
+S:
+${document.getElementById("soap-s").value}
+
+O:
+${document.getElementById("soap-o").value}
+
+A:
+${document.getElementById("soap-a").value}
+
+P:
+${document.getElementById("soap-p").value}
+
+Y LỆNH:
+${Array.from(document.querySelectorAll("#orders-body tr"))
+  .map(row => [...row.querySelectorAll("input")].map(x => x.value).join(", "))
+  .filter(x => x.trim() !== ", , , ")
+  .join("\n")}
+`;
+
+  previewContent.textContent = text;
+  previewModal.classList.remove("hidden");
+});
+
+document.getElementById("btn-close-preview").addEventListener("click", () => {
+  previewModal.classList.add("hidden");
+});
+
+/* ---------------------------------------------------------
+   COPY NOTE
+--------------------------------------------------------- */
+document.getElementById("btn-copy-note").addEventListener("click", async () => {
+  await navigator.clipboard.writeText(previewContent.textContent);
+  alert("Đã copy hồ sơ bệnh án!");
+});
+</script>
 </body>
 </html>
